@@ -46,22 +46,25 @@ public class CorsInterceptor implements PostProcessInterceptor {
     String origin = "*";
 
     // System.out.println("starting");
-    // if(servletRequest != null){
-    // String requestedOrigin = servletRequest.getHeader("Origin");
-    //  System.out.println("end"+servletRequest.getHeader("Origin"));
-    // String bgswtalentedgeDomain=".bgswtalentedge-bosch.com";
-    // String careershaperDomain =".career-shaper.com";
-    // String edtechDomain =".hcl-edtech.com";
-
-    // if ( requestedOrigin != null && !requestedOrigin.isEmpty() &&
-    // requestedOrigin.contains(bgswtalentedgeDomain) ||
-    // requestedOrigin.contains(careershaperDomain) ||
-    // requestedOrigin.contains(edtechDomain)) {
-    //   origin = requestedOrigin;
-    // }
-    // System.out.println("origin == "+ origin);
-    // System.out.println("requestedOrigin == "+ requestedOrigin);
-    // }
+    if(servletRequest != null){
+    String requestedOrigin = servletRequest.getHeader("Origin");
+    System.out.println("end"+servletRequest.getHeader("Origin"));
+    String bgswtalentedgeDomain=".bgswtalentedge-bosch.com";
+    String careershaperDomain =".career-shaper.com";
+    String edtechDomain =".hcl-edtech.com";
+ System.out.println("requestedOrigin == "+ requestedOrigin);
+    if ( requestedOrigin != null && requestedOrigin != "null" && !requestedOrigin.isEmpty()){
+      if(requestedOrigin.contains(bgswtalentedgeDomain) ||
+      requestedOrigin.contains(careershaperDomain) ||
+      requestedOrigin.contains(edtechDomain)) {
+        origin = requestedOrigin;
+      } else {
+        origin= "http://localhost:8080";
+      }
+    }
+    System.out.println("origin == "+ origin);
+    System.out.println("requestedOrigin == "+ requestedOrigin);
+    }
     metadata.putSingle("Access-Control-Allow-Origin", origin);
     metadata.putSingle("Access-Control-Expose-Headers", "Location");
   }
