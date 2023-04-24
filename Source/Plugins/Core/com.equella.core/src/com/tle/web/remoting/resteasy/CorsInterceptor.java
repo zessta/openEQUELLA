@@ -18,8 +18,6 @@
 
 package com.tle.web.remoting.resteasy;
 
-import java.util.Enumeration;
-import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MultivaluedMap;
@@ -45,41 +43,25 @@ public class CorsInterceptor implements PostProcessInterceptor {
 
   private static void process(ServerResponse response) {
     final MultivaluedMap<String, Object> metadata = response.getMetadata();
-    String origin = "http://localhost:3009";
+    String origin = "*";
 
-    System.out.println("chandu");
-    MultivaluedMap<String, Object> orderedMap = response.getHeaders();
-    Iterator<String> mapIterator = orderedMap.keySet().iterator();
+    // System.out.println("starting");
+    // if(servletRequest != null){
+    // String requestedOrigin = servletRequest.getHeader("Origin");
+    //  System.out.println("end"+servletRequest.getHeader("Origin"));
+    // String bgswtalentedgeDomain=".bgswtalentedge-bosch.com";
+    // String careershaperDomain =".career-shaper.com";
+    // String edtechDomain =".hcl-edtech.com";
 
-    Enumeration<String> headerNames = servletRequest.getHeaderNames();
-
-    if (headerNames != null) {
-      while (headerNames.hasMoreElements()) {
-        System.out.println("Origin: " + servletRequest.getHeader("Origin"));
-        System.out.println("origin: " + servletRequest.getHeader("origin"));
-        System.out.println(
-            "Header: "
-                + headerNames.nextElement()
-                + servletRequest.getHeader(headerNames.nextElement()));
-      }
-    }
-    // iterate over the map
-    while (mapIterator.hasNext()) {
-      String key = mapIterator.next();
-      System.out.println("key:" + key + ", values=" + orderedMap.get(key));
-      // Collection<String> values = orderedMap.getCollection(key);
-      // // iterate over the entries for this key in the map
-      // for(Iterator<String> entryIterator = values.iterator(); entryIterator.hasNext();) {
-      // 	String value = entryIterator.next();
-      // 	System.out.println("    value:" + value);
-      // }
-    }
-
-    if (servletRequest.getHeader("Origin").equals("http://localhost:3000")) {
-      origin = servletRequest.getHeader("Origin");
-    } else if (servletRequest.getHeader("Origin").equals("http://localhost:3001")) {
-      origin = servletRequest.getHeader("Origin");
-    }
+    // if ( requestedOrigin != null && !requestedOrigin.isEmpty() &&
+    // requestedOrigin.contains(bgswtalentedgeDomain) ||
+    // requestedOrigin.contains(careershaperDomain) ||
+    // requestedOrigin.contains(edtechDomain)) {
+    //   origin = requestedOrigin;
+    // }
+    // System.out.println("origin == "+ origin);
+    // System.out.println("requestedOrigin == "+ requestedOrigin);
+    // }
     metadata.putSingle("Access-Control-Allow-Origin", origin);
     metadata.putSingle("Access-Control-Expose-Headers", "Location");
   }
