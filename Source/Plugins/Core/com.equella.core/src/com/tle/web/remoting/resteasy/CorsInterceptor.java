@@ -82,7 +82,6 @@ public class CorsInterceptor implements PostProcessInterceptor {
           }
         }
       }
-
       System.out.println("origin == " + origin);
       System.out.println("requestedOrigin == " + requestedOrigin);
     }
