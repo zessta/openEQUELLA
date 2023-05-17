@@ -2,7 +2,7 @@
 
 # first enter into machine navigate to project location and down the application
 
-sudo su
+# sudo su
 cd /home/ubuntu/openEQUELLA
 git pull
 cd docker
