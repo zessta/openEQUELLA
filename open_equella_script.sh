@@ -32,6 +32,7 @@ cd ../..
 cd /home/ubuntu/openEQUELLA/
 source .nvm/nvm.sh
 # ./sbt clean
+echo $pwd
 ./sbt installerZip
 
 
