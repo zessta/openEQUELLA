@@ -27,6 +27,7 @@ import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.configuration.PropertiesConfiguration;
 
 /** @author jmaginnis */
 @Bind
@@ -35,6 +36,22 @@ public class RequestFilter extends OncePerRequestFilter {
   @Inject(optional = true)
   @Named("strictTransportSecurity.maxage")
   private int stsMaxAge = -1;
+
+  PropertiesConfiguration corsConfiguration = null;
+  String allowedOrigins = "";
+
+  public RequestFilter() {
+    // Get CORS Properties
+    try {
+      // Use abosulte path in dev mode like
+      // /home/zadmin/codebase/hcl/min-cr/openEQUELLA/docker/cors.properties
+      corsConfiguration = new PropertiesConfiguration("cors.properties");
+      //  Default Origins
+      allowedOrigins = corsConfiguration.getProperty("content-security-policy.default") + "";
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
 
   @SuppressWarnings("nls")
   @Override
@@ -56,6 +73,8 @@ public class RequestFilter extends OncePerRequestFilter {
       response.setHeader(
           "Strict-Transport-Security", "max-age=" + stsMaxAge + "; includeSubDomains");
     }
+    response.addHeader("Strict-Transport-Security", "max-age=63072000; includeSubdomains;");
+    response.addHeader("Content-Security-Policy", "frame-ancestors 'self' " + allowedOrigins + ";");
     return new FilterResult(response);
   }
 }
