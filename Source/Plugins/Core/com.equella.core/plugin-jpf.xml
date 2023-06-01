@@ -4012,6 +4012,7 @@
   </extension>
   <extension plugin-id="com.tle.web.viewurl" point-id="resourceViewer" id="packageDownloadViewer">
     <parameter id="id" value="downloadIms" />
+    <parameter id="display" value="false" />
     <parameter id="nameKey" value="com.equella.core.downloadviewer" />
     <parameter id="class" value="bean:com.tle.web.viewitem.treeviewer.DownloadPackageViewer" />
   </extension>
