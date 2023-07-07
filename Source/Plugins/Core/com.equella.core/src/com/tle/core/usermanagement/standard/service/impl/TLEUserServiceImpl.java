@@ -63,6 +63,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.regex.*;
+import java.security.SecureRandom;
 
 /** @author Nicholas Read */
 @Singleton
@@ -129,6 +130,48 @@ public class TLEUserServiceImpl
     return uuid;
   }
 
+  public String generateRandomPassword() {
+    String specialChars = "#?!@$%^&*-";
+    String allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789#?!@$%^&*-";
+
+    SecureRandom random = new SecureRandom();
+    int max=32;
+    int min =8;
+    int length = random.nextInt(max-min+1)+min;
+    StringBuilder password = new StringBuilder(length);
+
+    boolean hasUpperCase = false;
+    boolean hasLowerCase = false;
+    boolean hasNumber = false;
+    boolean hasSpecialCharacter = false;
+
+    while (password.length() < length) {
+      char nextCharacter = allowedChars.charAt(random.nextInt(allowedChars.length()));
+
+      if (Character.isUpperCase(nextCharacter))
+          hasUpperCase = true;
+      else if (Character.isLowerCase(nextCharacter))
+          hasLowerCase = true;
+      else if (Character.isDigit(nextCharacter))
+          hasNumber = true;
+      else if (specialChars.indexOf(nextCharacter) != -1)
+          hasSpecialCharacter = true;
+
+      password.append(nextCharacter);
+    }
+
+    if (!hasUpperCase)
+        password.setCharAt(random.nextInt(length), 'Z');
+    if (!hasLowerCase)
+        password.setCharAt(random.nextInt(length), 'k');
+    if (!hasNumber)
+        password.setCharAt(random.nextInt(length), '6');
+    if (!hasSpecialCharacter)
+        password.setCharAt(random.nextInt(length), specialChars.charAt(random.nextInt(specialChars.length())));
+
+    return password.toString();
+  }
+
   @Override
   @RequiresPrivilege(priv = "EDIT_USER_MANAGEMENT")
   @Transactional
@@ -137,8 +180,7 @@ public class TLEUserServiceImpl
     user.setUsername(username);
     user.setFirstName(username);
     user.setLastName(username);
-    user.setPassword(UUID.randomUUID().toString());
-
+    user.setPassword(generateRandomPassword());
     return add(user, groups);
   }
 

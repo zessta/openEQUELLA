@@ -55,6 +55,7 @@ import com.tle.web.resources.PluginResourceHelper;
 import com.tle.web.resources.ResourcesService;
 import com.tle.web.sections.equella.annotation.PlugKey;
 import com.tle.web.sections.render.Label;
+import com.tle.core.usermanagement.standard.service.impl.TLEUserServiceImpl;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -83,6 +84,7 @@ public class LtiWrapper extends AbstractUserDirectory {
   @Inject private PluginTracker<LtiWrapperExtension> extensions;
   @Inject private LtiConsumerService consumerService;
   @Inject private EncryptionService encryptionService;
+  TLEUserServiceImpl tleUserServiceImpl = new TLEUserServiceImpl();
 
   @Override
   protected boolean initialise(UserManagementSettings settings) {
@@ -280,7 +282,7 @@ public class LtiWrapper extends AbstractUserDirectory {
     user.setFirstName(getFirstName(request));
     user.setLastName(getLastName(request));
     user.setEmailAddress(getEmail(request));
-    user.setPassword(UUID.randomUUID().toString());
+    user.setPassword(tleUserServiceImpl.generateRandomPassword());
 
     runAs.executeAsSystem(
         CurrentInstitution.get(),
