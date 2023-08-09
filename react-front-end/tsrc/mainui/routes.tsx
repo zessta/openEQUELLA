@@ -43,6 +43,9 @@ const ContentIndexSettings = React.lazy(
 const MyResourcesPage = React.lazy(
   () => import("../myresources/MyResourcesPage")
 );
+const MyPage = React.lazy(
+  () => import("../myresources/MyPage")
+)
 
 export interface BaseOEQRouteComponentProps {
   updateTemplate: (edit: TemplateUpdate) => void;
@@ -73,6 +76,7 @@ interface Routes {
   LoginNoticeConfig: OEQRouteNewUI;
   Logout: OEQRouteTo<string>;
   MyResources: OEQRouteNewUI;
+  Sample: OEQRouteNewUI;
   Notifications: OEQRouteTo<string>;
   RemoteSearch: OEQRouteTo<ToFunc>;
   SearchFilterSettings: OEQRouteNewUI;
@@ -113,6 +117,7 @@ export const OLD_SEARCH_PATH = "/searching.do";
 export const NEW_SEARCH_PATH = "/page/search";
 export const NEW_ADVANCED_SEARCH_PATH = "/page/advancedsearch";
 export const NEW_MY_RESOURCES_PATH = "/page/myresources";
+export const NEW_PAGE = "/page/mypage";
 export const OLD_MY_RESOURCES_PATH = "/access/myresources.do";
 
 export const routes: Routes = {
@@ -147,6 +152,10 @@ export const routes: Routes = {
   MyResources: {
     path: NEW_MY_RESOURCES_PATH,
     component: MyResourcesPage,
+  },
+  Sample: {
+    path: NEW_PAGE,
+    component: MyPage,
   },
   Notifications: {
     to: "/access/notifications.do",

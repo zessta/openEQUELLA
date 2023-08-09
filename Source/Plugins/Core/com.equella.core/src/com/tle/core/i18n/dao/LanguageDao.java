@@ -22,9 +22,13 @@ import com.tle.beans.Language;
 import com.tle.core.hibernate.dao.GenericInstitutionalDao;
 import java.util.Collection;
 import java.util.Map;
+import com.tle.beans.entity.LanguageString;
+import java.util.List;
 
 public interface LanguageDao extends GenericInstitutionalDao<Language, Long> {
   Map<Long, String> getNames(Collection<Long> bundleRef);
 
   void deleteBundles(Collection<Long> bundles);
+
+  List<LanguageString> listAllLanguageBundle(Long bundleId);
 }

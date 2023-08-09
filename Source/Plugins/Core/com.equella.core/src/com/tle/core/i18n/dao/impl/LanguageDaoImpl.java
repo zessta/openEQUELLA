@@ -37,6 +37,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate5.HibernateCallback;
+import com.tle.beans.entity.LanguageString;
 
 @Bind(LanguageDao.class)
 @Singleton
@@ -122,6 +123,13 @@ public class LanguageDaoImpl extends GenericInstitionalDaoImpl<Language, Long>
       }
     }
     return missingRefs;
+  }
+
+  @Override
+  public List<LanguageString> listAllLanguageBundle(Long bundleId) {
+    return (List<LanguageString>)
+      getHibernateTemplate()
+        .find("from LanguageString where bundle_id = ?0", bundleId);
   }
 
   private void populateNameMap(

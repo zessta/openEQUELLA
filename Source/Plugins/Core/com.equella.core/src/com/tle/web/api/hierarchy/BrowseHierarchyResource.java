@@ -77,6 +77,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import com.tle.beans.entity.LanguageString;
+import com.tle.core.i18n.dao.impl.LanguageDaoImpl;
+import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import com.tle.core.i18n.dao.LanguageDao;
+import com.tle.web.api.hierarchy.HierarchyDao;
 
 /** @author larry */
 @Bind
@@ -92,6 +101,7 @@ public class BrowseHierarchyResource {
   @Inject private ItemLinkService itemLinkService;
   @Inject private ItemSerializerService itemSerializerService;
   @Inject private TLEAclManager aclManager;
+  @Inject private LanguageDao languageDao;
 
   /**
    * Similar to the <server_url>/api/hierarchy<br>
@@ -129,6 +139,49 @@ public class BrowseHierarchyResource {
 
     return Response.ok(retBean).build();
   }
+
+
+  private List<HierarchyDao> dao(String uuid) {
+    List<HierarchyTopic> topLevelNodes = new ArrayList<HierarchyTopic>();
+    HierarchyTopic hierarchyTopic = hierarchyService.getHierarchyTopicByUuid(uuid);
+    topLevelNodes = hierarchyService.getChildTopics(hierarchyTopic);
+  
+    List <HierarchyDao> daoList = new ArrayList <> ();
+  
+    for(HierarchyTopic ht : topLevelNodes) {
+      HierarchyDao hdao = new HierarchyDao();
+      LanguageBundle languageBundle = ht.getName();
+      Long languageBundleId = languageBundle.getId();
+      List<LanguageString> languageString = languageDao.listAllLanguageBundle(languageBundleId);
+      hdao.setUuid(ht.getUuid()); 
+      hdao.setValue(languageString.get(0).getText());
+      hdao.setDao(dao(ht.getUuid()));  
+      daoList.add(hdao);  
+    }
+    return daoList;
+  }
+  
+  @GET
+  @Path("/all")
+  @ApiOperation(value = "List all hierarchies and sub-hierarchies")
+  public List<HierarchyDao> listAllHierarchies() {
+    List<HierarchyDao> ret = new ArrayList<HierarchyDao>();
+    List<HierarchyTopic> topLevelNodes = new ArrayList<HierarchyTopic>();
+    topLevelNodes = hierarchyService.getChildTopics(null);
+    for(HierarchyTopic ht : topLevelNodes) {
+      LanguageBundle languageBundle = ht.getName();
+      Long languageBundleId = languageBundle.getId();
+      List<LanguageString> languageString = languageDao.listAllLanguageBundle(languageBundleId);
+      HierarchyDao hierarchyDao = new HierarchyDao();
+      hierarchyDao.setUuid(ht.getUuid());
+      hierarchyDao.setValue(languageString.get(0).getText());
+      hierarchyDao.setDao(dao(ht.getUuid()));
+      ret.add(hierarchyDao);
+    }
+    return ret;
+  }
+  
+
 
   /**
    * From any hierarchy beyond the root, display its contents and its subnodes, virtualize subnode
